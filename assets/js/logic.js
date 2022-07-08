@@ -1,40 +1,97 @@
 var startButton = document.getElementById("start");
 var questionC = document.getElementById("question-container");
+var timerText = document.getElementById("timer");
 var timer = 0;
-var button = document.createElement("button");
-// var choice1 = document.createElement("button");
-// var choice2 = document.createElement("button");
-// var choice3 = document.createElement("button");
-// var choice4 = document.createElement("button");
+var questionNum = 0;
+var score = 0;
 
-startButton.addEventListener("click", function(event){
-    event.preventDefault();
+var timerCount = setInterval(function() {
+    if (timer > 0) {
+        timerText.textContent = timer;
+        timer--
+        console.log(timer);
+    }
+}, 1000)
+
+// FUNCTION TO GET FIRST QUESTION WITH ANSWERS ON THE SCREEN 
+function gameStart(){
+    startButton.style.visibility = "hidden";
+    questionNum = 0;
     timer = 90;
-    button.innerHTML = "Click";
-    questionC.appendChild(button);
-    score = 0;
-    for (i = 0; i < questions.length && timer > 0; i++) {
-        var questionHolder = document.createElement("p");
-        questionHolder.textContent = Object.values(questions[i])[0];
-        questionC.appendChild(questionHolder);
-        for (j = 0; j < 4; j++) {
-            var element = event.target;
-            var choice = document.createElement("button");
-            choice.textContent = Object.values(questions[i])[1][j];
-            questionHolder.appendChild(choice);
-            solution = Object.values(questions[i])[2];
-            choice.addEventListener("click", function(event, solution) {
-                event.preventDefault();
-                if (element.textContent === solution) {
-                    score++
-                } else {
-                    timer -= 10;
-                };
-            });
-        };
+    questionC.textContent = Object.values(questions[questionNum])[0];
+    for (i = 0; i < questions[questionNum].choices.length; i++) {
+        var choice = document.createElement("button");
+        choice.textContent = Object.values(questions[questionNum])[1][i];
+        questionC.appendChild(choice);
+    }
+         
+}
+
+function checkAnswer(event, answer) {
+    event.preventDefault()
+    var answer = event.target
+    if (questionNum < questions.length) {
+        var questionAnswer = Object.values(questions[questionNum])[2];
     };
-});
+    if (answer.textContent !== questionAnswer) {
+        timer -= 10;
+        questionNum++;
+        if (questionNum === questions.length) {
+            endGame(score, timer);
+        } else {
+            nextQuestion(questionNum);
+        }
+    } else {
+        score++;
+        questionNum++;
+        if (questionNum === questions.length) {
+            endGame(score, timer);
+        } else {
+            nextQuestion(questionNum);
+        }
+    };
+}
+
+function nextQuestion(questionNum) {
+    if (questionNum < questions.length) {
+        questionC.textContent = Object.values(questions[questionNum])[0];
+        for (i = 0; i < questions[questionNum].choices.length; i++) {
+            var choice = document.createElement("button");
+            choice.textContent = Object.values(questions[questionNum])[1][i];
+            questionC.appendChild(choice);
+        }
+    };
+}
+
+function endGame(score, timer) {
+    startButton.style.visibility = "visible";
+    var finalScore = timer+score
+    questionC.textContent = "Game Over! Your score was! " + (finalScore) + " Enter your initials!: ";
+    clearInterval(timerCount);
+    saveScore(finalScore);
+};
+
+function saveScore(finalScore) {
+    var scoreSaver = document.createElement("input");
+    scoreSaver.type = "text";
+    questionC.appendChild(scoreSaver);
+    scoreSaver.addEventListener("submit", pushScore(scoreSaver, finalScore))
+};
+
+function pushScore(scoreSaver, finalScore) {
+    var initials = scoreSaver.value
+    scoreWithInitial[initials] = finalScore;
+    console.log("Score pushed");
+};
+
+questionC.addEventListener("click", checkAnswer);
+
+startButton.addEventListener("click", gameStart);
 
 function init(){
-
+    timer = 0;
+    score = 0;
+    questionNum = 0;
 };
+
+init();
