@@ -1,3 +1,26 @@
 #start {
     background-color: lightblue;
+    color: black;
+    display: block;
+}
+
+header {
+}
+
+#question-container {
+    font-size: 32px;
+    font-weight: bold;
+    display: flex;
+    flex-flow: column nowrap;
+    background-color: bisque;
+    height: 100%;
+}
+
+button {
+    background-color: purple;
+    color: white;
+
+}
+
+h1 {
 }
