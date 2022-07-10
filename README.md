@@ -12,7 +12,7 @@ Provide a short description explaining the what, why, and how of your project. U
 
 ## Screenshot
 
-    ![screenshot](./assets/images/screenshot.PNG)
+![screenshot](./assets/images/screenshot.PNG)
 
 
 ## License
